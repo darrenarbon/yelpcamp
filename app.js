@@ -15,17 +15,8 @@ var express                 = require("express"),
     authRoutes              = require("./routes/auth"),
     flash                   = require("connect-flash");
 
-
-
-// mongoose.connect("mongodb://darren:oliver@ds137019.mlab.com:37019/darrenarbonyelpcamp", function(err, db){
-//     if(err) {
-//         console.log("Database Failed");
-//     } else {
-//         console.log("Database Connected");
-//     }
-// });
-
-mongoose.connect(process.env.DATABASEURL, function(err, db){
+var DBurl = process.env.DATABASEURL || "mongodb://localhost:27017/yelp_camp_v4"
+mongoose.connect(DBurl, function(err, db){
 	if(err) {
 		console.log("Database Failed");
 	} else {

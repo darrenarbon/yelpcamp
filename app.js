@@ -14,23 +14,24 @@ var express                 = require("express"),
     campgroundRoutes        = require("./routes/campgrounds"),
     authRoutes              = require("./routes/auth"),
     flash                   = require("connect-flash");
-    //moment                  = require("moment");
 
-mongoose.connect("mongodb://darren:oliver@ds137019.mlab.com:37019/darrenarbonyelpcamp", function(err, db){
-    if(err) {
-        console.log("Database Failed");
-    } else {
-        console.log("Database Connected");
-    }
-});
 
-// mongoose.connect("mongodb://localhost:27017/yelp_camp_v4", function(err, db){
-// 	if(err) {
-// 		console.log("Database Failed");
-// 	} else {
-// 		console.log("Database Connected");
-// 	}
+
+// mongoose.connect("mongodb://darren:oliver@ds137019.mlab.com:37019/darrenarbonyelpcamp", function(err, db){
+//     if(err) {
+//         console.log("Database Failed");
+//     } else {
+//         console.log("Database Connected");
+//     }
 // });
+
+mongoose.connect(process.env.DATABASEURL, function(err, db){
+	if(err) {
+		console.log("Database Failed");
+	} else {
+		console.log("Database Connected");
+	}
+});
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
@@ -83,6 +84,6 @@ app.use("/campgrounds", campgroundRoutes);
 // start server //
 //==============//
 
-app.listen(process.env.PORT, process.env.IP, function(){
+app.listen(process.env.PORT || 3000, process.env.IP, function(){
    console.log("The YelpCamp Server Has Started!");
 });

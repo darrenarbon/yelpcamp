@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 var express                 = require("express"),
     app                     = express(),
     bodyParser              = require("body-parser"),
@@ -13,6 +15,7 @@ var express                 = require("express"),
     commentRoutes           = require("./routes/comments"),
     campgroundRoutes        = require("./routes/campgrounds"),
     authRoutes              = require("./routes/auth"),
+    userRoutes             = require("./routes/users"),
     flash                   = require("connect-flash");
 
 var DBurl = process.env.DATABASEURL || "mongodb://localhost:27017/yelp_camp_v4"
@@ -65,6 +68,7 @@ app.use(function(req, res, next){
 app.use("/campgrounds/:id/comments", commentRoutes);
 app.use(authRoutes);
 app.use("/campgrounds", campgroundRoutes);
+app.use("/users", userRoutes);
 
 // ================//
 //    Seed Data    //

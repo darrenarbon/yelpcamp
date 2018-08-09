@@ -1,0 +1,38 @@
+<% include ../partials/header %> 
+
+<h1>User Profile: <%=user.username%></h1>
+<div class="row">
+	<div class="col-4">
+		<div class="card">
+			<% if (!user.avatar || user.avatar == "") {%>
+          		<img class="card-img-top" src="/images/avatar.png" alt="<%=user.firstname%> <%=user.surname%>">
+       		<% }else{ %>
+          		<img class="card-img-top" src="<%=user.avatar%>" alt="<%=user.firstname%> <%=user.surname%>">
+        	<%}%>
+			<div class="card-body">
+				<h5 class="card-title"><%=user.firstname%> <%=user.surname%>
+					<% if (user.isAdmin) { %>
+           				(admin)
+        			<%}%>
+				</h5>
+				<p class="card-text"><%=user.bio%></p>
+				<a class="btn btn-block btn-warning" href="/users/<%=user._id%>/edit">Edit Profile</a>
+			</div>
+		</div>
+	</div>
+	<div class="col-8">
+		<h5>Details</h5>
+		<p><strong>Email: </strong><%=user.email%></p>
+		<h5><%=user.firstname%>'s Campgrounds</h5>
+		<ul>
+		<% campgrounds.forEach(function(campground){
+		%>
+			<li><a href="/campgrounds/<%=campground._id%>"><%=campground.name%></a></li>
+
+		<% })%>
+		</ul>
+	</div>
+</div>
+
+
+<% include ../partials/footer %>

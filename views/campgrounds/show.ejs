@@ -1,55 +1,207 @@
 <% include ../partials/header %>
-<div class="container">
-    <div class="row">
-        <div class="col-md-3">
-            <p class="lead">YelpCamp</p>
-            <div class="list-group">
-                <li class="list-group-item active">Info 1</li>
-                <li class="list-group-item">Info 2</li>
-                <li class="list-group-item">Info 3</li>
+
+<div class="row">
+    <div class="col-md-3">
+        <h4 >Basic Info</h4>
+        Number of Sites: <%=campground.numofplots%><br>
+        Toilets: <%if(campground.toilets){%> <i class="fas fa-check"></i> <%}else{%> <i class="fas fa-times"></i> <%}%><br>
+        Tap Water: <%if(campground.tapwater){%> <i class="fas fa-check"></i> <%}else{%> <i class="fas fa-times"></i> <%}%><br>
+        Hot Water: <%if(campground.hotwater){%> <i class="fas fa-check"></i> <%}else{%> <i class="fas fa-times"></i> <%}%><br>
+        Showers: <%if(campground.showers){%> <i class="fas fa-check"></i> <%}else{%> <i class="fas fa-times"></i> <%}%><br>
+        Electric Hookup: <%if(campground.electrichookup){%> <i class="fas fa-check"></i> <%}else{%> <i class="fas fa-times"></i> <%}%><br>
+        Camp Shop: <%if(campground.campshop){%> <i class="fas fa-check"></i> <%}else{%> <i class="fas fa-times"></i> <%}%><br>
+        <div id="map"></div>
+    </div>
+    <div class="col-md-9">
+        <div class="card mb-2">
+            <img class="card-img-top" src="<%= campground.image %>" alt="<%=campground.name%></a>">
+            <div class="card-body">
+                <h4 class="float-right">£<%=campground.price%>/night</h4>
+                <h4 class="card-title"><%=campground.name%></h4>
+                <p><em>Added By <a href="/users/<%=campground.author.id%>"><%=campground.author.username%></a>, <%= moment(campground.createdAt).fromNow() %></em></p>
+                <p class="card-text"><%= campground.description %></p>
+                <% if(currentUser && campground.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin) { %>
+                <a class="btn btn-sm btn-warning" href="/campgrounds/<%=campground._id%>/edit">Edit</a>
+                <form class="delete-form" method="POST" action="/campgrounds/<%=campground._id%>?_method=DELETE">
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                </form>
+                <% } %>
             </div>
         </div>
-        <div class="col-md-9">
-            <div class="thumbnail">
-                <img class="img-responsive" src="<%= campground.image %>">
-                <div class="caption-full">
-                    <h4 class="pull-right">£<%=campground.price%>/night</h4>
-                    <h4><a><%=campground.name%></a></h4>
-                    <p><%= campground.description %></p>
-                    <p><em>Added By <%=campground.author.username%>, <%= moment(campground.createdAt).fromNow() %></em></p>
-                    <% if(currentUser && campground.author.id.equals(currentUser._id)) { %>
-                    <a class="btn btn-xs btn-warning" href="/campgrounds/<%=campground._id%>/edit">Edit</a>
-                    <form class="delete-form" method="POST" action="/campgrounds/<%=campground._id%>?_method=DELETE">
-                        <button class="btn btn-xs btn-danger">Delete</button>
-                    </form>
-                    <% } %>
+        <!-- COMMENT SECTION START -->
+        <div class="card">
+            <div class="card-body">
+                <div class="float-right">
+                    <a class="btn btn-success" role="button" data-toggle="collapse" href="#collapseComment" aria-expanded="false" aria-controls="collapseComment">
+                        <i class="fas fa-plus"></i> Add new comment
+                    </a>
                 </div>
-            </div>
-            <div class="well">
-                <div class="text-right">
-                    <a class="btn btn-xs btn-success" href="/campgrounds/<%= campground._id %>/comments/new">Add New Comment</a>
-                </div>
-                <hr>
-                <% campground.comments.forEach(function(comment){ %>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <strong><%= comment.author.username %></strong>
-                            <span class="pull-right"><%= moment(comment.createdAt).fromNow() %></span>
-                            <p>
-                                <%= comment.text %> 
-                            </p>
-                            <% if(currentUser && comment.author.id.equals(currentUser._id)) { %>
-                                <a class="btn btn-xs btn-warning" href="/campgrounds/<%=campground._id%>/comments/<%=comment._id%>/edit">Edit</a>
-                                <form class="delete-form" method="POST" action="/campgrounds/<%=campground._id%>/comments/<%=comment._id%>?_method=DELETE">
-                                    <button class="btn btn-xs btn-danger">Delete</button>
-                                </form>
-                            <% } %>     
+                <h4><strong>Comments <i class="fas fa-comment-alt"></i></strong></h4>
+                    <% 
+                        var aRating = 0;
+                        var numberofratings = 0;
+                        campground.comments.forEach(function(comment){
+                            if(comment.rating){
+                                aRating = aRating + comment.rating
+                                numberofratings ++
+                            }
+                        })
+
+                        if (numberofratings == 0) {
+                            aRating = "No ratings have been made";
+                        } else {
+                            aRating = aRating / numberofratings
+                            aRating = aRating.toFixed(1) + " stars"
+                        }
+                        %>
+                        Average Rating: <%=aRating%>
+            
+                    <hr>
+                    <div class="collapse" id="collapseComment">
+                        <div class="card comments">
+                            <div class="card-body">
+                                <% if(!currentUser) { %>
+                                    <!--If the user is not logged in, direct him to the login page-->
+                                    <h5>You need to login before you can comment. <a href="/login">Click here</a> to go to the login page.</h5>
+                                <% } %>
+                                <% if(currentUser) { %>
+                                    <!--If the user is logged in, show the new comment form-->
+                                    <h4>Write your comment <i class="fas fa-pencil-alt"></i></h4>
+                                    <form id="add-comment-form" action="/campgrounds/<%= campground._id %>/comments" method="POST">
+                                        <div class="form-group">
+                                            <input class="form-control" type="text" disabled value="<%= currentUser.username %>">
+                                        </div>
+                                        <div class="form-group" id="starsColl">
+                                            <input type="hidden" name="comment[rating]" id="rating" >
+                                            <i class="fas fa-star" id="star_1" starnumber="1"></i>
+                                            <i class="fas fa-star" id="star_2" starnumber="2"></i>
+                                            <i class="fas fa-star" id="star_3" starnumber="3"></i>
+                                            <i class="fas fa-star" id="star_4" starnumber="4"></i>
+                                            <i class="fas fa-star" id="star_5" starnumber="5"></i>
+                                            <span id="starMessage"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <textarea class="form-control" name="comment[text]" placeholder="Write your comment..." form="add-comment-form" rows="5" cols="70"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn btn-success btn-sm">Comment <i class="fas fa-comment-alt"></i></button>
+                                        </div>
+                                    </form>
+                                <% } %>
+                            </div>
                         </div>
                     </div>
-                <% }) %>
+                    <div class="row">
+                    <% campground.comments.forEach(function(comment){ %>
+                        <div class="col-md-12 mb-2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="float-left">
+                                        <p class="card-title"><strong><a href="/users/<%=comment.author.id%>"><i class="fas fa-user"></i> <%= comment.author.username %></a></strong>  
+                                        <%for (var i=1; i <= comment.rating; i++){%>
+                                            <i class="fas fa-star starChosen"></i>
+                                        <%}%></p>
+                                        <p class="card-text"><%= comment.text %></p>
+                                    </div>
+                                    <div class="float-right">
+                                        <p><%= moment(comment.createdAt).fromNow() %></p>
+                                        <% if(currentUser && comment.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin) { %>
+                                        <div class="float-right">
+                                            <a class="btn btn-sm btn-warning" href="/campgrounds/<%=campground._id%>/comments/<%=comment._id%>/edit">Edit</a>
+                                            <form class="delete-form" method="POST" action="/campgrounds/<%=campground._id%>/comments/<%=comment._id%>?_method=DELETE">
+                                                <button class="btn btn-sm btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                    </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    function initMap() {
+        var lat = <%=campground.lat %>;
+        var lng = <%=campground.lng %>;
+        var center = {lat: lat, lng:lng};
+        var map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 8,
+            center:center,
+            scrollwheel: false
+        });
+        var contentString = `
+            <strong><%= campground.name %><br />
+            <%= campground.location %></strong>
+            <p><%= campground.description %></p>
+        `
+        var infowindow = new google.maps.InfoWindow({
+            content: contentString
+        });
+        var marker = new google.maps.Marker({
+            position: center,
+            map: map
+        });
+        marker.addListener("click", function() {
+            infowindow.open(map, marker);
+        });
+    }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmNgr3RLehG21hlcyhjDr4GDH-055p9Gk&callback=initMap"></script>
+<script language="javascript">
+    //create arrays of the stars and the messages
+    var aStars = document.querySelectorAll("i.fa-star");
+    var aFeedbackText = ["", "I hate it", "I didn't like it", "It was okay", "I liked it", "I loved it"]
+    
+    //go through each star and add the event listeners
+    aStars.forEach(function(star){
+        star.addEventListener("mouseover", fnLightUpStars);
+        star.addEventListener("mouseout", fnDeLightStars);
+        star.addEventListener("click", fnCommitChange);
+    });
+
+    //current rating setting for the edit page
+    var currentRating = 0;
+    //light up the stars depending on what the current is (edit only)
+    for (var i = 1; i <= currentRating; i++){
+        document.getElementById("star_" + i).classList.add("starChosen");
+    }
+
+    //function to light up the stars when hover and to add a textual message
+    function fnLightUpStars() {  
+        for (var i = 1; i <= this.getAttribute("starnumber"); i++){
+            document.getElementById("star_" + i).classList.add("starOn");
+        }
+        document.getElementById("starMessage").innerText = aFeedbackText[this.getAttribute("starnumber")]
+    }
+
+    //function to remove the starOn class when mouse moves away
+    function fnDeLightStars() {
+        for (var j = 1; j < 6; j++){
+            document.getElementById("star_" + j).classList.remove("starOn");
+        }
+        document.getElementById("starMessage").innerText = ""
+    }
+
+    //function run when user clicks on a star to light them orange, then commit the star rating to the hidden value field
+    function fnCommitChange() {
+        //clear any stars already set in case a user needs to change their rating mid comment
+        aStars.forEach(function(star){
+            star.classList.remove("starChosen");
+        })
+
+        //set the number of stars needed to be orange
+        for (var i = 1; i <= this.getAttribute("starnumber"); i++){
+            var iStar = document.getElementById("star_" + i);
+            iStar.classList.add("starChosen");
+        }
+
+        //set the value to the hidden input field so that the data can be committed to the DB
+        document.getElementById("rating").value = this.getAttribute("starnumber")
+    }
+</script>
 
 <% include ../partials/footer %>

@@ -1,45 +1,70 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <!-- Make site responsive on mobile/tablet -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>YelpCamp</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
         <link rel="stylesheet" href="/stylesheets/main.css">
+        <link rel="stylesheet" href="/stylesheets/auto_comp.css">
     </head>
     <body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/campgrounds">YelpCamp</a>
-            </div>
-            <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <% if(!currentUser) {%>
-                    <li><a href="/login">Login</a></li>
-                    <li><a href="/register">Register</a></li>
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="/campgrounds"><span class="glyphicon glyphicon-tent"></span> YelpCamp</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+
+            <form class="form-inline mr-auto">
+                <div class="bc-wrapper">
+                    <input class="form-control" type="search" id="searchBar" name="searchBar" placeholder="search for campsites" aria-label="Search">
+                    <a class="btn btn-success" onclick="fnLoadSite()">Search</a>
+                </div>
+            </form>
+
+            <ul class="navbar-nav">
+                <% if(!currentUser){ %>
+                    <li class="nav-item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>"><a class="nav-link" href="/login">Login</a></li>
+                    <li class="nav-item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>"><a class="nav-link" href="/register">Sign Up</a></li>
+                <% } else { %>
+                    <% if (!currentUser.firstname){ %>
+                        <li class="nav-item"><a href="/users/<%=currentUser._id%>" class="nav-link">Currently Signed In As: <%=currentUser.username%></a></li>
                     <% } else { %>
-                        <% if (!currentUser.firstname){ %>
-                            <li><a href="#">Currently Signed In As: <%=currentUser.username%></a></li>
-                        <% } else { %>
-                            <li><a href="#">Currently Signed In As: <%=currentUser.firstname%> <%=currentUser.surname%></a></li>
-                        <% } %>
-                    <li><a href="/logout">Logout</a></li>
+                        <li class="nav-item"><a href="/users/<%=currentUser._id%>" class="nav-link">Currently Signed In As: <%=currentUser.firstname%> <%=currentUser.surname%></a></li>
                     <% } %>
-                </ul>
-            </div>
+
+                    <% if(currentUser.isAdmin) {%>
+                        <li class="nav-item"><a href="/users" class="nav-link">Manage Users</a></li>
+                    <% } %>
+                    <li class="nav-item"><a href="/logout" class="nav-link">Logout</a></li>
+                <% } %>
+            </ul>
         </div>
     </nav>
     
     <div class="container">
         <% if (error && error.length > 0) { %>
-            <div class="alert alert-danger">
+            <div class="alert alert-danger alert-dismissible fade show text-center font-weight-bold" role="alert">
                 <%= error %>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
         <% } %>
 
         <% if (success && success.length > 0) { %>
         <div class="container">
-            <div class="alert alert-success">
+            <div class="alert alert-success alert-dismissible fade show text-center font-weight-bold" role="alert">
                 <%= success %>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
         <% } %>
     </div>
+
+    <div class="container">

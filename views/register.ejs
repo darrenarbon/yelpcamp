@@ -1,12 +1,21 @@
 <% include ./partials/header %> 
-<h1>Sign Up Form</h1>
-
-<form action="/register" method="POST">
-	<input type="text" name="username" placeholder="Username">
-	<input type="text" name="firstname" placeholder="First Name">
-	<input type="text" name="surname" placeholder="Surname">
-	<input type="password" name="password" placeholder="Password">
-	<input type="submit" value="Submit">
-</form>
+<div class="row">
+	<div class="col-md-12">
+		<form class="form-signin" action="/register" method="POST">
+			<h1 class="h3 mb-3 font-weight-normal">Please Register</h1>
+			<label for="username" class="sr-only">Username</label>
+			<input class="form-control" type="text" name="username" id="username" placeholder="Username" autofocus required>
+			
+			<label for="firstname" class="sr-only">Firstname</label>
+			<input class="form-control form-middle" type="text" name="firstname" id="firstname" required placeholder="First Name">
+			
+			<label for="surname" class="sr-only">Surname</label>
+			<input class="form-control form-middle" type="text" name="surname" id="surname" placeholder="Surname" required>
+			
+			<label for="password" class="sr-only">Password</label>
+			<input class="form-control" type="password" name="password" id="password" required placeholder="Password">
+			
+			<button class="btn btn-lg btn-primary btn-block">Login</button>
+		</form>
 
 <% include ./partials/footer %> 

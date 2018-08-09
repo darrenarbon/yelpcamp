@@ -1,19 +1,83 @@
 <% include ../partials/header %>
-<div class="container">
-    <div class="row">
-        <h1 style="text-align: center">Edit Comment</h1>
-        <div style="width: 30%; margin: 25px auto;">
-            <form action="/campgrounds/<%= campground_id %>/comments/<%= comment._id %>?_method=PUT" method="POST">
-                <div class="form-group">
-                    <input class="form-control" type="text" name="comment[text]" value="<%=comment.text%>">
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-lg btn-primary btn-block">Submit!</button>
-                </div>
-            </form>
-            <a href="/campgrounds/<%=campground_id%>">Go Back</a>
-        </div>
+
+<div class="row justify-content-center">
+    <div class="col-md-12 text-center">
+        <h1>Edit Comment</h1>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+        <form action="/campgrounds/<%= campground_id %>/comments/<%= comment._id %>?_method=PUT" method="POST">
+            <div class="form-group">
+                <input class="form-control" type="text" name="comment[text]" value="<%=comment.text%>">
+            </div>
+            <div class="form-group" id="starsColl">
+                <input type="hidden" name="comment[rating]" id="rating" >
+
+                <i class="fas fa-star" id="star_1" starnumber="1"></i>
+                <i class="fas fa-star" id="star_2" starnumber="2"></i>
+                <i class="fas fa-star" id="star_3" starnumber="3"></i>
+                <i class="fas fa-star" id="star_4" starnumber="4"></i>
+                <i class="fas fa-star" id="star_5" starnumber="5"></i>
+                <span id="starMessage"></span>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-lg btn-primary btn-block">Submit!</button>
+            </div>
+        </form>
+        <a href="/campgrounds/<%=campground_id%>">Go Back</a>
     </div>
 </div>
+
+<script language="javascript">
+    //create arrays of the stars and the messages
+    var aStars = document.querySelectorAll("i.fa-star");
+    var aFeedbackText = ["", "I hate it", "I didn't like it", "It was okay", "I liked it", "I loved it"]
+    
+    //go through each star and add the event listeners
+    aStars.forEach(function(star){
+        star.addEventListener("mouseover", fnLightUpStars);
+        star.addEventListener("mouseout", fnDeLightStars);
+        star.addEventListener("click", fnCommitChange);
+    });
+
+    //current rating setting for the edit page
+    var currentRating = <%=comment.rating%> + "";
+    //light up the stars depending on what the current is (edit only)
+    for (var i = 1; i <= currentRating; i++){
+        document.getElementById("star_" + i).classList.add("starChosen");
+    }
+
+    //function to light up the stars when hover and to add a textual message
+    function fnLightUpStars() {  
+        for (var i = 1; i <= this.getAttribute("starnumber"); i++){
+            document.getElementById("star_" + i).classList.add("starOn");
+        }
+        document.getElementById("starMessage").innerText = aFeedbackText[this.getAttribute("starnumber")]
+    }
+
+    //function to remove the starOn class when mouse moves away
+    function fnDeLightStars() {
+        for (var j = 1; j < 6; j++){
+            document.getElementById("star_" + j).classList.remove("starOn");
+        }
+        document.getElementById("starMessage").innerText = ""
+    }
+
+    //function run when user clicks on a star to light them orange, then commit the star rating to the hidden value field
+    function fnCommitChange() {
+        //clear any stars already set in case a user needs to change their rating mid comment
+        aStars.forEach(function(star){
+            star.classList.remove("starChosen");
+        })
+
+        //set the number of stars needed to be orange
+        for (var i = 1; i <= this.getAttribute("starnumber"); i++){
+            var iStar = document.getElementById("star_" + i);
+            iStar.classList.add("starChosen");
+        }
+
+        //set the value to the hidden input field so that the data can be committed to the DB
+        document.getElementById("rating").value = this.getAttribute("starnumber")
+    }
+</script>
 <% include ../partials/footer %>
 

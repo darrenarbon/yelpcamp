@@ -1,31 +1,82 @@
 <% include ../partials/header %> 
 
-<div class="container">
-  <header class="jumbotron">
-    <div class="container">
-      <h1><span class="glyphicon glyphicon-tent"></span>Welcome To YelpCamp!</h1>
-      <p>View our hand-picked campgrounds from all over the world</p>
-      <p>
-        <a class="btn btn-primary btn-large" href="/campgrounds/new">Add New Campground</a>
-      </p>
-    </div>
-  </header>
-     
-  <div class="row text-center" style="display:flex; flex-wrap: wrap;">
-    <% campgrounds.forEach(function(campground){ %>
-    <div class="col-md-3 col-sm-6">
-      <div class="thumbnail">
-        <img src="<%= campground.image %>">
-        <div class="caption">
-          <h4><%= campground.name %></h4>
+
+<header class="jumbotron">
+  <div class="container">
+    <h1><span class="glyphicon glyphicon-tent"></span>Welcome To YelpCamp!</h1>
+    <p>View our hand-picked campgrounds from all over the world</p>
+    <p>
+      <a class="btn btn-primary btn-large" href="/campgrounds/new">Add New Campground</a>
+    </p>
+    <form class="form-inline" action="/campgrounds/advSearch" method="POST">
+        <div class="bc-wrapper">
+            <input class="form-control" type="search" id="mainSearch" name="mainSearch" placeholder="Search for campsites" aria-label="Search">
+            <button type="submit" class="btn btn-success">Search</button>
+            <a class="btn btn-success" role="button" data-toggle="collapse" href="#collapseAdvSearch" aria-expanded="false" aria-controls="collapseAdvSearch">
+                <i class="fas fa-search"></i> Advanced Search
+            </a>
         </div>
-        <p>
-          <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">More Info</a>
-        </p>
+        <br>
+        <div class="collapse comments" id="collapseAdvSearch">
+          <div class="row mt-3">
+            <div class="col-6">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="">Price Per Night From</span>
+                </div>
+                <input type="number" class="form-control" name="costFrom" id="costFrom">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="">To</span>
+                </div>
+                <input type="number" class="form-control"  name="costTo" id="costTo">
+              </div>
+            </div>
+            <div class="col-6 ">
+              <div class="form-check justify-content-start">
+                  <input class="form-check-input" type="checkbox" id="toilets" name="toilets" value="true">
+                  <label class="form-check-label" for="toilets">Toilets?</label>
+              </div>
+              <div class="form-check justify-content-start">
+                  <input class="form-check-input" type="checkbox" id="tapwater" name="tapwater" value="true">
+                  <label class="form-check-label" for="tapwater">Tap Water?</label>
+              </div>
+              <div class="form-check justify-content-start">
+                  <input class="form-check-input" type="checkbox" id="hotwater" name="hotwater" value="true">
+                  <label class="form-check-label" for="hotwater">Hot Water?</label>
+              </div>
+              <div class="form-check justify-content-start">
+                  <input class="form-check-input" type="checkbox" id="showers" name="showers" value="true">
+                  <label class="form-check-label" for="showers">Showers?</label>
+              </div>
+              <div class="form-check justify-content-start">
+                  <input class="form-check-input" type="checkbox" id="electrichookup" name="electrichookup" value="true">
+                  <label class="form-check-label" for="electrichookup">Electric Hookup?</label>
+              </div>
+              <div class="form-check justify-content-start">
+                  <input class="form-check-input" type="checkbox" id="campshop" name="campshop" value="true">
+                  <label class="form-check-label" for="campshop">Camp Shop?</label>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+  </div>
+</header>
+   
+<div class="row text-center" style="display:flex; flex-wrap: wrap;">
+  <% campgrounds.forEach(function(campground){ %>
+  <div class="col-lg-3 col-md-4 col-sm-6">
+    
+    <div class="card">
+      <img class="card-img-top" src="<%= campground.image %>" alt="<%= campground.name %>">
+      <div class="card-body">
+        <h5 class="card-title"><%= campground.name %></h5>
+        <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">More Info</a>
       </div>
     </div>
-    <% }); %>
   </div>
+  <% }); %>
 </div>
+
 
 <% include ../partials/footer %>

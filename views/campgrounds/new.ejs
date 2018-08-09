@@ -1,28 +1,66 @@
 <% include ../partials/header %>
-<div class="container">
-    <div class="row">
-        <h1 style="text-align: center">Create a New Campground</h1>
-        <div style="width: 30%; margin: 25px auto;">
-            <form action="/campgrounds" method="POST">
-                <div class="form-group">
-                    <input class="form-control" type="text" name="name" placeholder="Campsite Name">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="number" name="price" placeholder="Cost of Camp Site Per Night" min="1.00" step="0.01">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="image" placeholder="URL of Image">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="description" placeholder="description">
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-lg btn-primary btn-block">Submit!</button>
-                </div>
-            </form>
-            <a href="/campgrounds">Go Back</a>
-        </div>
+
+<div class="row justify-content-center">
+    <div class="col-md-12 text-center">
+        <h1>Create a New Campground</h1>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+        <form action="/campgrounds" method="POST">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input class="form-control" type="text" name="name" id="name" placeholder="Campsite Name">
+            </div>
+            <div class="form-group">
+                <label for="price">Price Per Night</label>
+                <input class="form-control" type="number" id="price" name="price" placeholder="Cost of Camp Site Per Night" min="1.00" step="0.01">
+            </div>
+            <div class="form-group">
+                <label for="image">Image URL</label>
+                <input class="form-control" id="image" type="text" name="image" placeholder="URL of Image">
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <input class="form-control" id="description" type="text" name="description" placeholder="description">
+            </div>
+            <div class="form-group">
+                <label for="noofplots">Number of Plots</label>
+                <input class="form-control" type="number" name="numofplots" id="numofplots" placeholder="Number of plots on site">
+            </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input class="form-control" type="text" name="location" id="location" placeholder="Seven Sisters Country Park">
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="toilets" name="user[toilets]" value="true">
+                <label class="form-check-label" for="toilets">Toilets?</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="tapwater" name="campground[tapwater]" value="true">
+                <label class="form-check-label" for="tapwater">Tap Water?</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="hotwater" name="campground[hotwater]" value="true">
+                <label class="form-check-label" for="hotwater">Hot Water?</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="showers" name="campground[showers]" value="true">
+                <label class="form-check-label" for="showers">Showers?</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="electrichookup" name="campground[electrichookup]" value="true">
+                <label class="form-check-label" for="electrichookup">Electric Hookup?</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="campshop" name="campground[campshop]" value="true">
+                <label class="form-check-label" for="campshop">Camp Shop?</label>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-lg btn-primary btn-block">Submit!</button>
+            </div>
+        </form>
+        <a href="/campgrounds">Go Back</a>
     </div>
 </div>
+
 <% include ../partials/footer %>
 

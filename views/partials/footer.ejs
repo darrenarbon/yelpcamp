@@ -1,2 +1,48 @@
+    </div><!-- .container -->
+    
+    <!-- jQuery CDN -->
+	<script
+	  src="https://code.jquery.com/jquery-3.1.1.min.js"
+	  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+	  crossorigin="anonymous"></script>
+
+	<!-- Bootstrap JS CDN -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+	
+	<script src="/js/auto_comp.js"></script>
+
+	<script language="javascript">
+		"use strict";
+
+		(function( $ ) {
+		    $(function() {
+		        $( "#searchBar" ).bootcomplete({
+		          url: "/campgrounds/quickSearch",
+		          method: "post"
+		        });
+
+		    });
+		})( jQuery );
+
+		(function( $ ) {
+		    $(function() {
+		        $( "#mainSearch" ).bootcomplete({
+		          url: "/campgrounds/quickSearch",
+		          method: "post"
+		        });
+
+		    });
+		})( jQuery );
+
+		function fnLoadSite() {
+			if (!document.getElementById("searchBar_id").value || document.getElementById("searchBar_id").value == "") {
+				location.replace("http://localhost:3000/campgrounds/" + document.getElementById("mainSearch_id").value);
+			} else {
+				location.replace("http://localhost:3000/campgrounds/" + document.getElementById("searchBar_id").value);
+			}
+		}
+	</script>
     </body>
 </html>
